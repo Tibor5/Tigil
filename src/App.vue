@@ -1,23 +1,30 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import HeaderBar from './components/HeaderBar.vue'
+import NavDrawer from './components/NavDrawer.vue'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <v-app dark id="Tigil">
+    <HeaderBar location="Home"/>
+    <NavDrawer currentMenu="Home"/>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+    <v-main>
+      <div>
+        <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+        <div class="wrapper">
+          <HelloWorld msg="Volim te jaretojo!" />
+          <nav>
+            <RouterLink to="/">Home</RouterLink>
+            <RouterLink to="/about">About</RouterLink>
+          </nav>
+        </div>
+      </div>
+      <v-content>
+        <RouterView />
+      </v-content>
+    </v-main>
+  </v-app>
 </template>
 
 <style scoped>
