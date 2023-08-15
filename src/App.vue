@@ -2,7 +2,6 @@
 import { RouterLink, RouterView } from 'vue-router'
 import HeaderBar from './components/HeaderBar.vue'
 import NavDrawer from './components/NavDrawer.vue'
-import Form from './components/Form.vue'
 
 </script>
 
@@ -11,16 +10,21 @@ import Form from './components/Form.vue'
     <NavDrawer currentMenu="Home"/>
     <HeaderBar location="Home"/>
 
-    <v-main class="d-flex align-center justify-center"
-    style="min-height: 300px;">
-      <div>
-        <img alt="Vue logo" class="logo" src="@/assets/TIGIL.png" width="125" height="125" />
+    <v-main scrollable="true" style="min-height: 300px;">
+
+      <v-container>
         <nav>
-          <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/about">About</RouterLink>
+          <v-btn to="/about">About</v-btn>
+          <v-btn to="/createpost">New Post</v-btn>
+          <v-btn to="/explore">Explore</v-btn>
+          <v-btn to="/feed">Feed</v-btn>
+          <v-btn to="/">Home</v-btn>
+          <v-btn to="/profile">My profile</v-btn>
+          <v-btn to="/review">Review</v-btn>
+          <v-btn to="/profile/settings">Settings</v-btn>
         </nav>
-      </div>
-    
+      </v-container>
+
       <RouterView />
 
     </v-main>

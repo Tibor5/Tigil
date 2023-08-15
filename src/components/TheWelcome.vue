@@ -1,86 +1,71 @@
-<script setup lang="ts">
-import WelcomeItem from './WelcomeItem.vue'
-import DocumentationIcon from './icons/IconDocumentation.vue'
-import ToolingIcon from './icons/IconTooling.vue'
-import EcosystemIcon from './icons/IconEcosystem.vue'
-import CommunityIcon from './icons/IconCommunity.vue'
-import SupportIcon from './icons/IconSupport.vue'
-</script>
-
 <template>
-  <WelcomeItem>
-    <template #icon>
-      <DocumentationIcon />
-    </template>
-    <template #heading>Documentation</template>
+  <v-container fluid>
+    <div>
+      <img alt="Tigil logo" class="logo" src="@/assets/TIGIL.png" width="256" height="256" />
+    </div>
 
-    Vue’s
-    <a href="https://vuejs.org/" target="_blank" rel="noopener">official documentation</a>
-    provides you with all information you need to get started.
-  </WelcomeItem>
+    <v-row align="center" justify="left" class="hero">
+      <v-col cols="12" md="6">
+        <h1>Welcome to Tigil</h1>
+        <p>Seek truth together.</p>
+        <v-btn large color="primary">Get Started</v-btn>
+      </v-col>
+    </v-row>
 
-  <WelcomeItem>
-    <template #icon>
-      <ToolingIcon />
-    </template>
-    <template #heading>Tooling</template>
+    <v-container v-for="post in featuredPosts" :key="post.id">
+      <Post :post="post"/>
+    </v-container>
 
-    This project is served and bundled with
-    <a href="https://vitejs.dev/guide/features.html" target="_blank" rel="noopener">Vite</a>. The
-    recommended IDE setup is
-    <a href="https://code.visualstudio.com/" target="_blank" rel="noopener">VSCode</a> +
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank" rel="noopener">Volar</a>. If
-    you need to test your components and web pages, check out
-    <a href="https://www.cypress.io/" target="_blank" rel="noopener">Cypress</a> and
-    <a href="https://on.cypress.io/component" target="_blank">Cypress Component Testing</a>.
+    <!-- <v-row align="center" justify="center"> -->
+    <!--   <v-col v-for="post in featuredPosts" :key="post.id" cols="12" md="4"> -->
+    <!--     <v-card> -->
+    <!--       <v-card-title>{{ post.title }}</v-card-title> -->
+    <!--       <v-card-subtitle>{{ post.author }}</v-card-subtitle> -->
+    <!--       <v-card-text>{{ post.summary }}</v-card-text> -->
+    <!--       <v-card-actions> -->
+    <!--         <v-btn text>Read More</v-btn> -->
+    <!--       </v-card-actions> -->
+    <!--     </v-card> -->
+    <!--   </v-col> -->
+    <!-- </v-row> -->
 
-    <br />
+  </v-container>
 
-    More instructions are available in <code>README.md</code>.
-  </WelcomeItem>
+  <v-divider inset></v-divider>
 
-  <WelcomeItem>
-    <template #icon>
-      <EcosystemIcon />
-    </template>
-    <template #heading>Ecosystem</template>
+  <v-container fluid>
+    <div>
+      <h2>
+        Sign up or Log in
+      </h2>
+    </div>
 
-    Get official tools and libraries for your project:
-    <a href="https://pinia.vuejs.org/" target="_blank" rel="noopener">Pinia</a>,
-    <a href="https://router.vuejs.org/" target="_blank" rel="noopener">Vue Router</a>,
-    <a href="https://test-utils.vuejs.org/" target="_blank" rel="noopener">Vue Test Utils</a>, and
-    <a href="https://github.com/vuejs/devtools" target="_blank" rel="noopener">Vue Dev Tools</a>. If
-    you need more resources, we suggest paying
-    <a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">Awesome Vue</a>
-    a visit.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <CommunityIcon />
-    </template>
-    <template #heading>Community</template>
-
-    Got stuck? Ask your question on
-    <a href="https://chat.vuejs.org" target="_blank" rel="noopener">Vue Land</a>, our official
-    Discord server, or
-    <a href="https://stackoverflow.com/questions/tagged/vue.js" target="_blank" rel="noopener"
-      >StackOverflow</a
-    >. You should also subscribe to
-    <a href="https://news.vuejs.org" target="_blank" rel="noopener">our mailing list</a> and follow
-    the official
-    <a href="https://twitter.com/vuejs" target="_blank" rel="noopener">@vuejs</a>
-    twitter account for latest news in the Vue world.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <SupportIcon />
-    </template>
-    <template #heading>Support Vue</template>
-
-    As an independent project, Vue relies on community backing for its sustainability. You can help
-    us by
-    <a href="https://vuejs.org/sponsor/" target="_blank" rel="noopener">becoming a sponsor</a>.
-  </WelcomeItem>
+  </v-container>
 </template>
+
+<script lang="ts">
+import Post from './Post.vue'
+
+export default {
+  data: () => ({
+    featuredPosts: [
+      {
+        id: 1,
+        title: "How to Start with Vue.js",
+        author: "John Doe",
+        category: "Web dev",
+        verificationStatus: false,
+        content: "Learn how to start building applications with Vue.js in this beginner-friendly guide."
+      },
+      {
+        id: 2,
+        title: "Deep Dive into Vuetify",
+        author: "Jane Smith",
+        category: "Front-end",
+        verificationStatus: true,
+        content: "Explore the components and capabilities of Vuetify, the popular Vue UI library."
+      },
+    ],
+  }),
+};
+</script>
