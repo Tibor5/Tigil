@@ -8,9 +8,9 @@ import NavDrawer from './components/NavDrawer.vue'
 <template>
   <v-app dark id="Tigil">
     <NavDrawer currentMenu="Home"/>
-    <HeaderBar location="Home"/>
+    <HeaderBar title="Tigil"/>
 
-    <v-main scrollable="true" style="min-height: 300px;">
+    <v-main style="min-height: 300px;">
 
       <v-container>
         <nav>

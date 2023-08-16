@@ -1,36 +1,24 @@
 <template>
   <v-container fluid>
-    <div>
+    <div align="center">
       <img alt="Tigil logo" class="logo" src="@/assets/TIGIL.png" width="256" height="256" />
     </div>
 
-    <v-row align="center" justify="left" class="hero">
+    <v-row align="center" justify="center" class="hero">
       <v-col cols="12" md="6">
-        <h1>Welcome to Tigil</h1>
-        <p>Seek truth together.</p>
-        <v-btn large color="primary">Get Started</v-btn>
+        <h1 align="center">Seek truth together.</h1>
       </v-col>
     </v-row>
 
-    <v-container v-for="post in featuredPosts" :key="post.id">
-      <Post :post="post"/>
-    </v-container>
-
-    <!-- <v-row align="center" justify="center"> -->
-    <!--   <v-col v-for="post in featuredPosts" :key="post.id" cols="12" md="4"> -->
-    <!--     <v-card> -->
-    <!--       <v-card-title>{{ post.title }}</v-card-title> -->
-    <!--       <v-card-subtitle>{{ post.author }}</v-card-subtitle> -->
-    <!--       <v-card-text>{{ post.summary }}</v-card-text> -->
-    <!--       <v-card-actions> -->
-    <!--         <v-btn text>Read More</v-btn> -->
-    <!--       </v-card-actions> -->
-    <!--     </v-card> -->
-    <!--   </v-col> -->
-    <!-- </v-row> -->
+    <v-row v-for="post in featuredPosts" :key="post.id">
+      <v-col cols="12">
+        <Post :post="post"/>
+      </v-col>
+    </v-row>
 
   </v-container>
 
+  <v-spacer></v-spacer>
   <v-divider inset></v-divider>
 
   <v-container fluid>
@@ -47,6 +35,9 @@
 import Post from './Post.vue'
 
 export default {
+  components: {
+    Post,
+  },
   data: () => ({
     featuredPosts: [
       {

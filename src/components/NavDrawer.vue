@@ -7,15 +7,18 @@
     @click="rail = false"
   >
 
-    <v-list-item height="80" style="display: flex; justify-content: space-between; align-items: center;" nav>
-      <template v-slot:prepend>
+    <v-list-item class="custom-list-item" nav>
+      <template v-slot:default>
         <v-list-item-contents v-if="!rail">
-          <v-list-item-title>Tigil</v-list-item-title>
-          <v-list-item-subtitle>Create knowledge</v-list-item-subtitle>
+          <v-list-item-title>
+            <div align="center" class="logo-container">
+              <img alt="Tigil logo" class="logo" src="@/assets/TIGIL.png" />
+            </div>
+          </v-list-item-title>
         </v-list-item-contents>
       </template>
-      <template v-slot:default>
-        <v-btn variant="text" @click.stop="rail = !rail">
+      <template v-slot:append>
+        <v-btn class="chevron-btn" variant="text" @click.stop="rail = !rail">
           <v-icon class="fa">
             {{ rail ? 'fa-chevron-right' : 'fa-chevron-left' }}
           </v-icon>
@@ -30,6 +33,7 @@
         v-for='item in menuItems'
         :key='item.title'
         :value='item.value'
+        :to='item.to'
         link>
         <template v-slot:prepend>
           <v-icon class="fa">{{ item.icon }}</v-icon>
@@ -49,14 +53,14 @@ export default {
   },
   data: () => ({
     menuItems: [
-      { icon: 'fa-user', title: 'My Account', value: 'account' },
-      { icon: 'fa-home', title: 'Home', value: 'home' },
-      { icon: 'fa-earth-americas', title: 'Explore', value: 'explore' },
-      { icon: 'fa-eye', title: 'Reviews', value: 'reviews' },
-      { icon: 'fa-bell', title: 'Notifications', value: 'notifications' },
-      { icon: 'fa-gear', title: 'Settings', value: 'settings' },
-      { icon: 'fa-arrow-right-from-bracket', title: 'Log Out', value: 'logout' },
-      { icon: 'fa-t', title: 'About Tigil', value: 'about' }
+      { icon: 'fa-user', title: 'My profile', value: 'myprofile', to:'/profile' },
+      { icon: 'fa-home', title: 'Home', value: 'home', to:'/' },
+      { icon: 'fa-earth-americas', title: 'Explore', value: 'explore', to:'/explore' },
+      { icon: 'fa-add', title: 'Publish', value: 'createpost', to:'/createpost' },
+      { icon: 'fa-eye', title: 'Review', value: 'reviews', to:'/review' },
+      { icon: 'fa-gear', title: 'Settings', value: 'settings', to:'/profile/settings' },
+      { icon: 'fa-arrow-right-from-bracket', title: 'Log Out', value: 'logout', to:'/' },
+      { icon: 'fa-t', title: 'About Tigil', value: 'about', to:'/about' }
     ],
     drawer: true,
     rail: true,
@@ -64,3 +68,29 @@ export default {
 }
 </script>
 
+<style scoped>
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.logo {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+}
+
+.custom-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+}
+
+.chevron-btn {
+  align-self: center;
+}
+
+</style>

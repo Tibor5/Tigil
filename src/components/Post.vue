@@ -1,31 +1,30 @@
 <template>
   <v-card variant="tonal">
     <v-card-title>
-      {{ post.title }}
-      <v-spacer></v-spacer>
-      <v-btn icon @click="savePost">
-        <v-icon>mdi-content-save</v-icon>
-      </v-btn>
-      <v-btn icon @click="sharePost">
-        <v-icon>mdi-share-variant</v-icon>
-      </v-btn>
+      <v-row no-gutters>
+        <v-col class="text-start">{{ post.title }}</v-col>
+        <v-col class="text-end">
+          <v-btn text small @click="viewStats">
+            {{ post.verificationStatus ? "Verified" : "Unverified" }}
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-card-title>
 
     <v-card-subtitle>
       {{ post.author }}
       <v-btn text small color="primary" @click="followUser">
-        Follow Author
+        Follow
       </v-btn>
     </v-card-subtitle>
 
     <v-card-text>
       {{ peekContent }}
       <!-- Additional details like post image, tags, etc. can go here -->
-      <div>
-        <v-chip small label color="primary" @click="followCategory(post.category)">
-          {{ post.category }}
-        </v-chip>
-      </div>
+      <v-spacer></v-spacer>
+      <v-chip small label color="primary" @click="followCategory(post.category)">
+        Subscribe: {{ post.category }}
+      </v-chip>
     </v-card-text>
 
     <v-card-actions>
@@ -33,8 +32,11 @@
         Read more
       </v-btn>
       <v-spacer></v-spacer>
-      <v-btn text small @click="viewStats">
-        Verification Stats: {{ post.verificationStatus }}
+      <v-btn icon @click="savePost">
+        <v-icon class="fa">fa-bookmark</v-icon>
+      </v-btn>
+      <v-btn icon @click="sharePost">
+        <v-icon class="fa">fa-share-nodes</v-icon>
       </v-btn>
     </v-card-actions>
   </v-card>
