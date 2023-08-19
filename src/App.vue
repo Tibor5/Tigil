@@ -7,22 +7,24 @@ import NavDrawer from './components/NavDrawer.vue'
 
 <template>
   <v-app dark id="Tigil">
-    <NavDrawer currentMenu="Home"/>
-    <HeaderBar title="Tigil"/>
+    <NavDrawer currentMenu="Home" />
+    <HeaderBar title="Tigil" />
 
     <v-main>
 
-      <v-container>
-        <nav>
-          <v-btn to="/about">About</v-btn>
-          <v-btn to="/createpost">New Post</v-btn>
-          <v-btn to="/explore">Explore</v-btn>
-          <v-btn to="/">Home</v-btn>
-          <v-btn to="/profile">My profile</v-btn>
-          <v-btn to="/review">Review</v-btn>
-          <v-btn to="/profile/settings">Settings</v-btn>
-          <v-btn to="/register">Register or sign up</v-btn>
-        </nav>
+      <v-container class="" fluid>
+        <v-row no-gutters>
+          <v-col-auto cols="12">
+            <v-btn class="pa-2 ma-2"><RouterLink to="/about">About</RouterLink></v-btn>
+            <v-btn class="pa-2 ma-2"><RouterLink to="/createpost">New Post</RouterLink></v-btn>
+            <v-btn class="pa-2 ma-2"><RouterLink to="/explore">Explore</RouterLink></v-btn>
+            <v-btn class="pa-2 ma-2"><RouterLink to="/">Home</RouterLink></v-btn>
+            <v-btn class="pa-2 ma-2"><RouterLink to="/profile">My profile</RouterLink></v-btn>
+            <v-btn class="pa-2 ma-2"><RouterLink to="/review">Review</RouterLink></v-btn>
+            <v-btn class="pa-2 ma-2"><RouterLink to="/profile/settings">Settings</RouterLink></v-btn>
+            <v-btn class="pa-2 ma-2"><RouterLink to="/register">Register or sign up</RouterLink></v-btn>
+          </v-col-auto>
+        </v-row>
       </v-container>
 
       <RouterView />

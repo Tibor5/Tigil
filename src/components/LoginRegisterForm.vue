@@ -83,10 +83,16 @@
 </template>
   
 <script lang="ts">
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { useRouter } from "vue-router";
 const router = useRouter();
-const auth = getAuth();
+let auth = getAuth();
 
 export default {
   data: () => ({
@@ -151,12 +157,10 @@ export default {
       if (this.registerValid) {
         createUserWithEmailAndPassword(auth, this.email, this.password)
           .then(() => {
-            console.log("Successfully registered!");
             router.push("/");
           })
           .catch((error) => {
-            console.log(error.code);
-            alert(error.message);
+            console.error(error.code);
           });
       }
     },
@@ -164,16 +168,39 @@ export default {
       if (this.loginValid) {
         signInWithEmailAndPassword(auth, this.email, this.password)
           .then(() => {
-            console.log("Successfully logged in!");
             router.push("/explore");
           })
           .catch((error) => {
-            console.log(error.code);
+            console.error(error.code);
             this.loginError = true;
-            this.loginErrorMessage = "Invalid e-mail or password";
+            switch (error.code) {
+              case "auth/invalid-email":
+                this.loginErrorMessage = "Invalid email";
+                break;
+              case "auth/user-not-found":
+                this.loginErrorMessage = "No account with that email was found";
+                break;
+              case "auth/wrong-password":
+                this.loginErrorMessage = "Incorrect password";
+                break;
+              default:
+                this.loginErrorMessage = "Email or password are invalid";
+                break;
+            }
           });
       }
     },
+    googleSignin() {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          console.log(result.user);
+          router.push("/explore");
+        })
+        .catch((error) => {
+
+        })
+    }
     // reset() {
     //   this.$refs.form.reset();
     // },

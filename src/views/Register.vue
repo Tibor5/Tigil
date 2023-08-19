@@ -10,15 +10,13 @@
       </p>
     </div>
 
-    <v-container>
-      <Form />
-    </v-container>
+    <Form justify="end"></Form>
 
   </v-main>
 </template>
 
 <script lang="ts">
-import Form from "../components/NewUserForm.vue"
+import Form from "../components/LoginregisterForm.vue"
 
 export default {
   components: {

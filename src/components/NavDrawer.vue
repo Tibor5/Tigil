@@ -1,11 +1,5 @@
 <template>
-  <v-navigation-drawer
-    v-model="drawer"
-    :rail="rail"
-    :rail-width="72"
-    permanent
-    @click="rail = false"
-  >
+  <v-navigation-drawer v-model="drawer" :rail="rail" :rail-width="72" permanent @click="rail = false">
 
     <v-list-item class="custom-list-item" nav>
       <template v-slot:default>
@@ -29,12 +23,7 @@
     <v-divider></v-divider>
 
     <v-list dense nav>
-      <v-list-item
-        v-for='item in menuItems'
-        :key='item.title'
-        :value='item.value'
-        :to='item.to'
-        link>
+      <v-list-item v-for='item in filteredMenuItems' :key='item.title' :value='item.value' :to='item.to' @click="item.click" link>
         <template v-slot:prepend>
           <v-icon class="fa">{{ item.icon }}</v-icon>
         </template>
@@ -47,24 +36,105 @@
 </template>
 
 <script lang="ts">
+import { useRouter } from "vue-router";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+
+let auth: any;
+const router = useRouter();
+
 export default {
   props: {
     currentMenu: String,
   },
   data: () => ({
+    isLoggedin: false,
     menuItems: [
-      { icon: 'fa-user', title: 'My profile', value: 'myprofile', to:'/profile' },
-      { icon: 'fa-home', title: 'Home', value: 'home', to:'/' },
-      { icon: 'fa-earth-americas', title: 'Explore', value: 'explore', to:'/explore' },
-      { icon: 'fa-add', title: 'Publish', value: 'createpost', to:'/createpost' },
-      { icon: 'fa-eye', title: 'Review', value: 'reviews', to:'/review' },
-      { icon: 'fa-gear', title: 'Settings', value: 'settings', to:'/profile/settings' },
-      { icon: 'fa-arrow-right-from-bracket', title: 'Log Out', value: 'logout', to:'/' },
-      { icon: 'fa-t', title: 'About Tigil', value: 'about', to:'/about' }
+      {
+        icon: 'fa-user',
+        title: 'My profile',
+        value: 'myprofile',
+        to: '/profile',
+        click: '',
+      },
+      {
+        icon: 'fa-home',
+        title: 'Home',
+        value: 'home',
+        to: '/',
+        click: '',
+      },
+      {
+        icon: 'fa-earth-americas',
+        title: 'Explore',
+        value: 'explore',
+        to: '/explore',
+        click: '',
+      },
+      {
+        icon: 'fa-add',
+        title: 'Publish',
+        value: 'createpost',
+        to: '/createpost',
+        click: '',
+      },
+      {
+        icon: 'fa-eye',
+        title: 'Review',
+        value: 'reviews',
+        to: '/review',
+        click: '',
+      },
+      {
+        icon: 'fa-gear',
+        title: 'Settings',
+        value: 'settings',
+        to: '/profile/settings',
+        click: '',
+      },
+      {
+        icon: 'fa-arrow-right-from-bracket',
+        title: 'Sign Out',
+        value: 'signout',
+        to: '',
+        click: 'handleSignout',
+      },
+      {
+        icon: 'fa-t',
+        title: 'About Tigil',
+        value: 'about',
+        to: '/about',
+        click: '',
+      }
     ],
     drawer: true,
     rail: true,
   }),
+  computed: {
+    filteredMenuItems() {
+      if (this.isLoggedin) {
+        return this.menuItems;
+      } else {
+        return this.menuItems.filter(item => item.value !== 'signout');
+      }
+    }
+  },
+  mounted() {
+    auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.isLoggedin = true;
+      } else {
+        this.isLoggedin = false;
+      }
+    });
+  },
+  methods: {
+    handleSignout() {
+      signOut(auth).then(() => {
+        router.push("/");
+      });
+    },
+  }
 }
 </script>
 
@@ -92,5 +162,4 @@ export default {
 .chevron-btn {
   align-self: center;
 }
-
 </style>

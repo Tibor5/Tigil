@@ -1,57 +1,46 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import About from    '../views/AboutView.vue'
-import NewPost from  '../views/CreateNewPostView.vue'
-import Explore from  '../views/ExploreView.vue'
-import Feed from     '../views/FeedView.vue'
-import HomeView from '../views/HomeView.vue'
-import Profile from  '../views/ProfileView.vue'
-import Review from   '../views/ReviewView.vue'
-import Settings from '../views/SettingsView.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/about',
-      name: 'about',
-      component: About
-    },
-    {
-      path: '/createpost',
-      name: 'createpost',
-      component: NewPost
-    },
-    {
-      path: '/explore',
-      name: 'explore',
-      component: Explore
-    },
-    {
-      path: '/feed',
-      name: 'feed',
-      component: Feed
-    },
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/profile',
-      name: 'profile',
-      component: Profile
-    },
-    {
-      path: '/review',
-      name: 'review',
-      component: Review
-    },
-    {
-      path: '/profile/settings',
-      name: 'settings',
-      component: Settings
-    },
+    { path: '/', name: 'home', component: () => import("../views/Home.vue") },
+    { path: '/profile', name: 'profile', component: () => import("../views/Profile.vue") },
+    { path: '/profile/settings', name: 'settings', component: () => import("../views/Settings.vue") },
+    { path: '/createpost', name: 'createpost', component: () => import("../views/NewPublication.vue") },
+    { path: '/explore', name: 'explore', component: () => import("../views/Explore.vue"), meta: {
+      requiresAuth: true,
+    } },
+    { path: '/review', name: 'review', component: () => import("../views/Review.vue") },
+    { path: '/about', name: 'about', component: () => import("../views/About.vue") },
+    { path: '/register', name: 'register', component: () => import("../views/Register.vue") },
   ]
-})
+});
+
+const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const removeListener = onAuthStateChanged(
+      getAuth(),
+      (user) => {
+        removeListener();
+        resolve(user);
+      },
+      reject
+    )
+  })
+}
+
+router.beforeEach(async (to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (await getCurrentUser()) {
+      next();
+    } else {
+      console.error("No access allowed");
+      next("/");
+    }
+  } else {
+    next();
+  }
+});
 
 export default router
