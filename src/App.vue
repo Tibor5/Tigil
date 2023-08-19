@@ -17,7 +17,6 @@ import NavDrawer from './components/NavDrawer.vue'
           <v-btn to="/about">About</v-btn>
           <v-btn to="/createpost">New Post</v-btn>
           <v-btn to="/explore">Explore</v-btn>
-          <v-btn to="/feed">Feed</v-btn>
           <v-btn to="/">Home</v-btn>
           <v-btn to="/profile">My profile</v-btn>
           <v-btn to="/review">Review</v-btn>

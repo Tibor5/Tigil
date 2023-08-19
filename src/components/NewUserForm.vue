@@ -27,10 +27,13 @@
                       @click:append="show1 = !show1"></v-text-field>
                   </v-col>
                   <v-col class="d-flex" cols="12" sm="6" xsm="12">
+                    <v-alert v-if="loginError" type="error" dense>
+                      {{ loginErrorMessage }}
+                    </v-alert>
                   </v-col>
                   <v-spacer></v-spacer>
-                  <v-col class="d-flex" cols="12" sm="3" xsm="12" align-end>
-                    <v-btn x-large block :disabled="!loginValid" color="success" @click="validate"> Login </v-btn>
+                  <v-col class="d-flex" cols="12" sm="2" xsm="12" align-end>
+                    <v-btn x-large block :disabled="!loginValid" color="success" @click="login"> Login </v-btn>
                   </v-col>
                 </v-row>
               </v-form>
@@ -60,13 +63,13 @@
                       @click:append="show1 = !show1"></v-text-field>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field block v-model="verifyPassword" :append-icon="show1 ? 'fa-solid fa-eye' : 'fa-regular fa-eye-slash'"
-                      :rules="[rules.required, passwordMatch]" :type="show1 ? 'text' : 'password'" name="input-10-1"
-                      label="Confirm Password" counter @click:append="show1 = !show1"></v-text-field>
+                    <v-text-field block v-model="verifyPassword" :append-icon="show2 ? 'fa-solid fa-eye' : 'fa-regular fa-eye-slash'"
+                      :rules="[rules.required, passwordMatch]" :type="show2 ? 'text' : 'password'" name="input-10-1"
+                      label="Confirm Password" counter @click:append="show2 = !show2"></v-text-field>
                   </v-col>
                   <v-spacer></v-spacer>
                   <v-col class="d-flex ml-auto" cols="12" sm="3" xsm="12">
-                    <v-btn x-large block :disabled="!registerValid" color="success" @click="validate">Register</v-btn>
+                    <v-btn x-large block :disabled="!registerValid" color="success" @click="register"> Register </v-btn>
                   </v-col>
                 </v-row>
               </v-form>
@@ -80,9 +83,10 @@
 </template>
   
 <script lang="ts">
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "vue-router";
 const router = useRouter();
+const auth = getAuth();
 
 export default {
   data: () => ({
@@ -102,6 +106,10 @@ export default {
     verifyPassword: "",
     loginPassword: "",
     loginEmail: "",
+    show1: false,
+    show2: false,
+    loginError: false,
+    loginErrorMessage: "",
     nameRules: [
       (value: any)  => {
         if (value) return true
@@ -128,7 +136,6 @@ export default {
         return "E-mail must be valid."
       },
     ],
-    show1: false,
     rules: {
       required: (value: any) => !!value || "Required.",
       min: (v: any) => (v && v.length >= 8) || "Min 8 characters"
@@ -136,14 +143,14 @@ export default {
   }),
   computed: {
     passwordMatch() {
-      return () => this.password === this.verifyPassword || "Password must match";
+      return () => this.password === this.verifyPassword || "Passwords must match";
     }
   },
   methods: {
-    validate() {
+    register() {
       if (this.registerValid) {
-        createUserWithEmailAndPassword(getAuth(), this.email, this.password)
-          .then((data) => {
+        createUserWithEmailAndPassword(auth, this.email, this.password)
+          .then(() => {
             console.log("Successfully registered!");
             router.push("/");
           })
@@ -153,12 +160,36 @@ export default {
           });
       }
     },
-    reset() {
-      this.$refs.form.reset();
+    login() {
+      if (this.loginValid) {
+        signInWithEmailAndPassword(auth, this.email, this.password)
+          .then(() => {
+            console.log("Successfully logged in!");
+            router.push("/explore");
+          })
+          .catch((error) => {
+            console.log(error.code);
+            this.loginError = true;
+            this.loginErrorMessage = "Invalid e-mail or password";
+          });
+      }
     },
-    resetValidation() {
-      this.$refs.form.resetValidation();
-    }
+    // reset() {
+    //   this.$refs.form.reset();
+    // },
+    // resetValidation() {
+    //   this.$refs.form.resetValidation();
+    // }
   },
+  watch: {
+    loginEmail() {
+      this.loginError = false;
+      this.loginErrorMessage = "";
+    },
+    loginPassword() {
+      this.loginError = false;
+      this.loginErrorMessage = "";
+    }
+  }
 }
 </script>
