@@ -42,7 +42,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   props: {
     post: {

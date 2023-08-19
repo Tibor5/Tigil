@@ -20,19 +20,18 @@
 
   <v-spacer></v-spacer>
   <v-divider inset></v-divider>
+  <v-spacer></v-spacer>
 
   <v-container fluid>
-    <div>
-      <h2>
-        Sign up or Log in
-      </h2>
-    </div>
-
+    <h2>
+      Register or Log in
+    </h2>
+    <v-btn rounded="xl" size="x-large" variant="tonal" icon="fa-solid fa-arrow-right-to-bracket" to="/register"></v-btn>
   </v-container>
 </template>
 
 <script lang="ts">
-import Post from './Post.vue'
+import Post from "./Post.vue"
 
 export default {
   components: {

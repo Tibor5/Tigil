@@ -11,9 +11,9 @@
     <v-row>
       <v-col cols="12" md="8">
         <v-text-field v-model="postTitle" label="Post Title" outlined @input="checkSimilarPosts"></v-text-field>
-        <v-list v-if="similarPosts.length">
+        <v-list v-if="similarPublications.length">
           <v-list-item-group>
-            <v-list-item v-for="post in similarPosts" :key="post.id">
+            <v-list-item v-for="post in similarPublications" :key="post.id">
               <v-list-item-content>
                 <v-list-item-title>{{ post.title }}</v-list-item-title>
               </v-list-item-content>
@@ -68,7 +68,12 @@ export default {
       reference: "",
       references: [],
       tags: [],
-      similarPosts: [] // Placeholder for similar posts
+      similarPublications: [
+        {
+          id: 1,
+          title: 'Dummy publication 1'
+        }
+      ] // Placeholder for similar posts
     };
   },
   methods: {
@@ -78,7 +83,7 @@ export default {
     checkSimilarPosts() {
       // Logic to check for similar posts goes here
       // For now, it's a placeholder
-      this.similarPosts = [
+      this.similarPublications = [
         { id: 1, title: "Sample Similar Post 1" },
         { id: 2, title: "Sample Similar Post 2" }
       ];

@@ -10,7 +10,7 @@ import NavDrawer from './components/NavDrawer.vue'
     <NavDrawer currentMenu="Home"/>
     <HeaderBar title="Tigil"/>
 
-    <v-main style="min-height: 300px;">
+    <v-main>
 
       <v-container>
         <nav>
@@ -22,6 +22,7 @@ import NavDrawer from './components/NavDrawer.vue'
           <v-btn to="/profile">My profile</v-btn>
           <v-btn to="/review">Review</v-btn>
           <v-btn to="/profile/settings">Settings</v-btn>
+          <v-btn to="/register">Register or sign up</v-btn>
         </nav>
       </v-container>
 
