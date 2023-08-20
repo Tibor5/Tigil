@@ -1,9 +1,8 @@
 <template>
-  <v-container fluid v-model="dialog" persistent max-width="720">
+  <v-container>
 
-      <v-tabs v-model="tab" show-arrows background-color="deep-green accent-4" icons-and-text dark grow>
-        <v-tabs-slider color="green darken-4"></v-tabs-slider>
-        <v-tab v-for="i in tabs" :key="i.id">
+      <v-tabs v-model="tab" max-width="720" bg-color="green-accent-4" icons-and-text dark grow>
+        <v-tab v-for="i in tabs" :key="i.id" color="green-lighten-4">
           <v-icon large>{{ i.icon }}</v-icon>
           <div class="caption py-1">{{ i.name }}</div>
         </v-tab>
@@ -12,7 +11,7 @@
       <v-window v-model="tab">
 
         <v-window-item>
-          <v-card class="px-4">
+          <v-card class="px-4" variant="tonal">
             <v-card-text>
               <v-form ref="loginForm" v-model="loginValid" lazy-validation>
                 <v-row>
@@ -34,6 +33,10 @@
                   <v-spacer></v-spacer>
                   <v-col class="d-flex" cols="12" sm="2" xsm="12" align-end>
                     <v-btn x-large block :disabled="!loginValid" color="success" @click="login"> Login </v-btn>
+                  </v-col>
+                  <v-spacer></v-spacer>
+                  <v-col class="d-flex" cols="12" sm="2" xsm="12" align-end>
+                    <v-btn x-large block :disabled="false" append-icon="fa-solid fa-google" @click="googleLogin"> Google login </v-btn>
                   </v-col>
                 </v-row>
               </v-form>
@@ -190,7 +193,7 @@ export default {
           });
       }
     },
-    googleSignin() {
+    googleLogin() {
       const provider = new GoogleAuthProvider();
       signInWithPopup(auth, provider)
         .then((result) => {
@@ -198,7 +201,7 @@ export default {
           router.push("/explore");
         })
         .catch((error) => {
-
+          console.log(error.code);
         })
     }
     // reset() {

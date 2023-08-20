@@ -3,7 +3,6 @@
     <v-app-bar-title>{{ title }}</v-app-bar-title>
     <template v-slot:append>
       <v-btn icon><v-icon class="fa">fa-search</v-icon></v-btn>
-      <!-- { icon: 'fa-bell', title: 'Notifications', value: 'notifications', to:'' }, -->
       <v-btn icon><v-icon class="fa">fa-bell</v-icon></v-btn>
       <v-btn icon><v-icon class="fa">fa-ellipsis-vertical</v-icon></v-btn>
       <v-btn icon @click="toggleTheme">

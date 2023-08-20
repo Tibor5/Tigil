@@ -12,9 +12,9 @@ import NavDrawer from './components/NavDrawer.vue'
 
     <v-main>
 
-      <v-container class="" fluid>
+      <v-container fluid>
         <v-row no-gutters>
-          <v-col-auto cols="12">
+          <v-col :align-self='auto' cols="12">
             <v-btn class="pa-2 ma-2"><RouterLink to="/about">About</RouterLink></v-btn>
             <v-btn class="pa-2 ma-2"><RouterLink to="/createpost">New Post</RouterLink></v-btn>
             <v-btn class="pa-2 ma-2"><RouterLink to="/explore">Explore</RouterLink></v-btn>
@@ -23,7 +23,7 @@ import NavDrawer from './components/NavDrawer.vue'
             <v-btn class="pa-2 ma-2"><RouterLink to="/review">Review</RouterLink></v-btn>
             <v-btn class="pa-2 ma-2"><RouterLink to="/profile/settings">Settings</RouterLink></v-btn>
             <v-btn class="pa-2 ma-2"><RouterLink to="/register">Register or sign up</RouterLink></v-btn>
-          </v-col-auto>
+          </v-col>
         </v-row>
       </v-container>
 

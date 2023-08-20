@@ -1,14 +1,11 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12">
-        <h1>Create New Publication</h1>
-      </v-col>
-    </v-row>
-
-    <NewPostForm></NewPostForm>
-
+  <v-container align="center" justify="start">
+    <h1>Create New Publication</h1>
   </v-container>
+
+  <v-main>
+    <NewPostForm/>
+  </v-main>
 </template>
 
 <script lang="ts">

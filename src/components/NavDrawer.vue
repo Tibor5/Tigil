@@ -2,14 +2,12 @@
   <v-navigation-drawer v-model="drawer" :rail="rail" :rail-width="72" permanent @click="rail = false">
 
     <v-list-item class="custom-list-item" nav>
-      <template v-slot:default>
-        <v-list-item-contents v-if="!rail">
-          <v-list-item-title>
-            <div align="center" class="logo-container">
-              <img alt="Tigil logo" class="logo" src="@/assets/TIGIL.png" />
-            </div>
-          </v-list-item-title>
-        </v-list-item-contents>
+      <template v-if="!rail" v-slot:default>
+        <v-list-item-title>
+          <div align="center" class="logo-container">
+            <img alt="Tigil logo" class="logo" src="@/assets/TIGIL.png" />
+          </div>
+        </v-list-item-title>
       </template>
       <template v-slot:append>
         <v-btn class="chevron-btn" variant="text" @click.stop="rail = !rail">
@@ -27,9 +25,7 @@
         <template v-slot:prepend>
           <v-icon class="fa">{{ item.icon }}</v-icon>
         </template>
-        <v-list-item-content>
-          <v-list-item-title v-if="!rail">{{ item.title }}</v-list-item-title>
-        </v-list-item-content>
+        <v-list-item-title v-if="!rail">{{ item.title }}</v-list-item-title>
       </v-list-item>
     </v-list>
   </v-navigation-drawer>

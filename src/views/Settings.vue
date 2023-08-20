@@ -1,7 +1,5 @@
 <template>
   <v-container>
-    <div>
-      <h1>Settings view</h1>
-    </div>
+    <h1>Settings view</h1>
   </v-container>
 </template>
