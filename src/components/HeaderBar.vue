@@ -2,9 +2,7 @@
   <v-app-bar :elevation="2">
     <v-app-bar-title>{{ title }}</v-app-bar-title>
     <template v-slot:append>
-      <v-btn icon><v-icon class="fa">fa-search</v-icon></v-btn>
-      <v-btn icon><v-icon class="fa">fa-bell</v-icon></v-btn>
-      <v-btn icon><v-icon class="fa">fa-ellipsis-vertical</v-icon></v-btn>
+      <v-btn icon="fa-solid fa-arrow-right-to-bracket" to="/register"></v-btn>
       <v-btn icon @click="toggleTheme">
         <v-icon class="fa" >{{ toggleThemeIcon }}</v-icon>
       </v-btn>

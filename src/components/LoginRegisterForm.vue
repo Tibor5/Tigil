@@ -1,7 +1,7 @@
 <template>
-  <v-container>
+  <v-container fluid>
 
-      <v-tabs v-model="tab" max-width="720" bg-color="green-accent-4" icons-and-text dark grow>
+      <v-tabs v-model="tab" bg-color="green-accent-4" icons-and-text dark grow>
         <v-tab v-for="i in tabs" :key="i.id" color="green-lighten-4">
           <v-icon large>{{ i.icon }}</v-icon>
           <div class="caption py-1">{{ i.name }}</div>
@@ -12,31 +12,30 @@
 
         <v-window-item>
           <v-card class="px-4" variant="tonal">
-            <v-card-text>
-              <v-form ref="loginForm" v-model="loginValid" lazy-validation>
+            <v-card-text>User for login (DEMO ONLY): user1@email.com. Password: pass1234
+              <v-form ref="loginForm" lazy-validation>
                 <v-row>
                   <v-col cols="12">
-                    <v-text-field v-model="loginEmail" :rules="loginEmailRules" label="E-mail"
+                    <v-text-field v-model="loginEmail" label="User name or E-mail"
                       required></v-text-field>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field v-model="loginPassword" :append-icon="show1 ? 'fa-solid fa-eye' : 'fa-regular fa-eye-slash'"
-                      :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'" name="input-10-1"
+                       :type="show1 ? 'text' : 'password'" name="input-10-1"
                       label="Password" hint="At least 8 characters" counter
                       @click:append="show1 = !show1"></v-text-field>
                   </v-col>
-                  <v-col class="d-flex" cols="12" sm="6" xsm="12">
+                  <v-col class="d-flex" cols="12" sm="6" xsm="12" align-start>
                     <v-alert v-if="loginError" type="error" dense>
                       {{ loginErrorMessage }}
                     </v-alert>
                   </v-col>
                   <v-spacer></v-spacer>
-                  <v-col class="d-flex" cols="12" sm="2" xsm="12" align-end>
-                    <v-btn x-large block :disabled="!loginValid" color="success" @click="login"> Login </v-btn>
+                  <v-col class="d-flex" cols="1" sm="2" xsm="12" align-end>
+                    <v-btn variant="tonal" icon="fa-brands fa-google" @click="googleLogin"></v-btn>
                   </v-col>
-                  <v-spacer></v-spacer>
                   <v-col class="d-flex" cols="12" sm="2" xsm="12" align-end>
-                    <v-btn x-large block :disabled="false" append-icon="fa-solid fa-google" @click="googleLogin"> Google login </v-btn>
+                    <v-btn x-large block :disabled="false" color="success" @click="login"> Login </v-btn>
                   </v-col>
                 </v-row>
               </v-form>
@@ -72,7 +71,7 @@
                   </v-col>
                   <v-spacer></v-spacer>
                   <v-col class="d-flex ml-auto" cols="12" sm="3" xsm="12">
-                    <v-btn x-large block :disabled="!registerValid" color="success" @click="register"> Register </v-btn>
+                    <v-btn x-large block :disabled="false" color="success" @click="register"> Register </v-btn>
                   </v-col>
                 </v-row>
               </v-form>
@@ -108,6 +107,7 @@ export default {
     loginValid: true,
     registerValid: true,
 
+    username: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -115,8 +115,10 @@ export default {
     verifyPassword: "",
     loginPassword: "",
     loginEmail: "",
+    selected: "",
     show1: false,
     show2: false,
+    accounts: [ 'user1@a.com', 'user2@b.com', 'user3@c.com'],
     loginError: false,
     loginErrorMessage: "",
     nameRules: [
@@ -157,59 +159,55 @@ export default {
   },
   methods: {
     register() {
-      if (this.registerValid) {
-        createUserWithEmailAndPassword(auth, this.email, this.password)
-          .then(() => {
-            router.push("/");
-          })
-          .catch((error) => {
-            console.error(error.code);
-          });
-      }
+      createUserWithEmailAndPassword(auth, this.email, this.password)
+        .then(() => {
+          this.$router.push('/');
+          console.log(this.loginEmail + this.loginPassword);
+        })
+        .catch((error) => {
+          console.error(error.code);
+        });
     },
-    login() {
-      if (this.loginValid) {
-        signInWithEmailAndPassword(auth, this.email, this.password)
-          .then(() => {
-            router.push("/explore");
-          })
-          .catch((error) => {
-            console.error(error.code);
-            this.loginError = true;
-            switch (error.code) {
-              case "auth/invalid-email":
-                this.loginErrorMessage = "Invalid email";
-                break;
-              case "auth/user-not-found":
-                this.loginErrorMessage = "No account with that email was found";
-                break;
-              case "auth/wrong-password":
-                this.loginErrorMessage = "Incorrect password";
-                break;
-              default:
-                this.loginErrorMessage = "Email or password are invalid";
-                break;
-            }
-          });
+    async login() {
+      try {
+        await signInWithEmailAndPassword(getAuth(), this.loginEmail, this.loginPassword)
+        .then(() => {
+          console.log(this.loginEmail, this.loginPassword);
+          this.$router.push('/explore');
+        })
+      } catch(error: any) {
+        console.error(this.loginEmail);
+        this.loginError = true;
+        switch (error.code) {
+          case "auth/invalid-email":
+            this.loginErrorMessage = "Invalid email";
+            break;
+          case "auth/user-not-found":
+            this.loginErrorMessage = "No account with that email was found";
+            break;
+          case "auth/wrong-password":
+            this.loginErrorMessage = "Incorrect password";
+            break;
+          default:
+            this.loginErrorMessage = "Email or password are invalid";
+            break;
+        }
+
       }
+        // .catch((error) => {
+        // });
     },
     googleLogin() {
       const provider = new GoogleAuthProvider();
       signInWithPopup(auth, provider)
         .then((result) => {
           console.log(result.user);
-          router.push("/explore");
+          this.$router.push('/explore');
         })
         .catch((error) => {
           console.log(error.code);
         })
-    }
-    // reset() {
-    //   this.$refs.form.reset();
-    // },
-    // resetValidation() {
-    //   this.$refs.form.resetValidation();
-    // }
+    },
   },
   watch: {
     loginEmail() {

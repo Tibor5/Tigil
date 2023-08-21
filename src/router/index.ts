@@ -7,7 +7,9 @@ const router = createRouter({
     { path: '/', name: 'home', component: () => import("../views/Home.vue") },
     { path: '/profile', name: 'profile', component: () => import("../views/Profile.vue") },
     { path: '/profile/settings', name: 'settings', component: () => import("../views/Settings.vue") },
-    { path: '/createpost', name: 'createpost', component: () => import("../views/NewPublication.vue") },
+    { path: '/createpost', name: 'createpost', component: () => import("../views/NewPublication.vue"), meta: {
+      requiresAuth: true,
+    } },
     { path: '/explore', name: 'explore', component: () => import("../views/Explore.vue"), meta: {
       requiresAuth: true,
     } },

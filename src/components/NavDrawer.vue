@@ -21,7 +21,7 @@
     <v-divider></v-divider>
 
     <v-list dense nav>
-      <v-list-item v-for='item in filteredMenuItems' :key='item.title' :value='item.value' :to='item.to' @click="item.click" link>
+      <v-list-item v-for='item in filteredMenuItems' :key='item.title' :value='item.value' :to='item.to' @click='handleClick(item.value)' link>
         <template v-slot:prepend>
           <v-icon class="fa">{{ item.icon }}</v-icon>
         </template>
@@ -50,56 +50,48 @@ export default {
         title: 'My profile',
         value: 'myprofile',
         to: '/profile',
-        click: '',
       },
       {
         icon: 'fa-home',
         title: 'Home',
         value: 'home',
         to: '/',
-        click: '',
       },
       {
         icon: 'fa-earth-americas',
         title: 'Explore',
         value: 'explore',
         to: '/explore',
-        click: '',
       },
       {
         icon: 'fa-add',
         title: 'Publish',
         value: 'createpost',
         to: '/createpost',
-        click: '',
       },
       {
         icon: 'fa-eye',
         title: 'Review',
         value: 'reviews',
         to: '/review',
-        click: '',
       },
       {
         icon: 'fa-gear',
         title: 'Settings',
         value: 'settings',
         to: '/profile/settings',
-        click: '',
       },
       {
         icon: 'fa-arrow-right-from-bracket',
         title: 'Sign Out',
         value: 'signout',
         to: '',
-        click: 'handleSignout',
       },
       {
         icon: 'fa-t',
         title: 'About Tigil',
         value: 'about',
         to: '/about',
-        click: '',
       }
     ],
     drawer: true,
@@ -110,7 +102,7 @@ export default {
       if (this.isLoggedin) {
         return this.menuItems;
       } else {
-        return this.menuItems.filter(item => item.value !== 'signout');
+        return this.menuItems.filter(item => !['signout', 'explore', 'reviews', 'createpost'].includes(item.value));
       }
     }
   },
@@ -125,10 +117,21 @@ export default {
     });
   },
   methods: {
+    handleClick(value: any) {
+      if (value === 'signout') {
+        console.log("handleCLick")
+        console.log(value);
+        this.handleSignout();
+      }
+    },
     handleSignout() {
-      signOut(auth).then(() => {
-        router.push("/");
-      });
+      console.log("handleSignout")
+      if (this.isLoggedin) {
+        signOut(auth).then(() => {
+          this.isLoggedin = false;
+          this.$router.push('/');
+        });
+      }
     },
   }
 }

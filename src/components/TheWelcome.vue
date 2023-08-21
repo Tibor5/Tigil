@@ -6,9 +6,16 @@
 
     <v-row align="center" justify="center" class="hero">
       <v-col cols="12" md="6">
-        <h1 align="center">Seek truth together.</h1>
+        <h1 align="center">Verify truth.</h1>
       </v-col>
     </v-row>
+
+    <v-container v-if="!isLoggedin" align="center">
+      <h2>
+        Register or Log in
+      </h2>
+      <v-btn rounded="xl" size="x-large" variant="tonal" icon="fa-solid fa-arrow-right-to-bracket" to="/register"></v-btn>
+    </v-container>
 
     <v-row v-for="post in featuredPosts" :key="post.id">
       <v-col cols="12">
@@ -22,22 +29,20 @@
   <v-divider inset></v-divider>
   <v-spacer></v-spacer>
 
-  <v-container fluid>
-    <h2>
-      Register or Log in
-    </h2>
-    <v-btn rounded="xl" size="x-large" variant="tonal" icon="fa-solid fa-arrow-right-to-bracket" to="/register"></v-btn>
-  </v-container>
 </template>
 
 <script lang="ts">
 import Post from "./Post.vue"
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+
+let auth: any;
 
 export default {
   components: {
     Post,
   },
   data: () => ({
+    isLoggedin: false,
     featuredPosts: [
       {
         id: 1,
@@ -45,7 +50,7 @@ export default {
         author: "John Doe",
         category: "Web dev",
         verificationStatus: false,
-        content: "Learn how to start building applications with Vue.js in this beginner-friendly guide."
+        content: "Learn how to start building applications with Vue.js in this beginner-friendly guide.",
       },
       {
         id: 2,
@@ -57,5 +62,15 @@ export default {
       },
     ],
   }),
+  mounted() {
+    auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.isLoggedin = true;
+      } else {
+        this.isLoggedin = false;
+      }
+    });
+  },
 };
 </script>

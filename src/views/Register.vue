@@ -9,11 +9,11 @@
     </p>
   </div>
 
-  <v-main>
+  <v-container style="max-width: 50%;">
 
     <Form :max-width="720"></Form>
 
-  </v-main>
+  </v-container>
 </template>
 
 <script lang="ts">
