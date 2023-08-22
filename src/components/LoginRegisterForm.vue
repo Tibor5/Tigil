@@ -12,7 +12,7 @@
 
         <v-window-item>
           <v-card class="px-4" variant="tonal">
-            <v-card-text>User for login (DEMO ONLY): user1@email.com. Password: pass1234
+            <v-card-text>User for login (DEMO ONLY): user2@email.com. Password: pass1234
               <v-form ref="loginForm" lazy-validation>
                 <v-row>
                   <v-col cols="12">
@@ -35,7 +35,7 @@
                     <v-btn variant="tonal" icon="fa-brands fa-google" @click="googleLogin"></v-btn>
                   </v-col>
                   <v-col class="d-flex" cols="12" sm="2" xsm="12" align-end>
-                    <v-btn x-large block :disabled="false" color="success" @click="login"> Login </v-btn>
+                    <v-btn x-large block :disabled="loading" :loading="loading" color="success" @click="login"> Login </v-btn>
                   </v-col>
                 </v-row>
               </v-form>
@@ -71,7 +71,7 @@
                   </v-col>
                   <v-spacer></v-spacer>
                   <v-col class="d-flex ml-auto" cols="12" sm="3" xsm="12">
-                    <v-btn x-large block :disabled="false" color="success" @click="register"> Register </v-btn>
+                    <v-btn x-large block color="success" @click="register" :disabled="loading" :loading="loading"> Register </v-btn>
                   </v-col>
                 </v-row>
               </v-form>
@@ -92,21 +92,12 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import { useRouter } from "vue-router";
-const router = useRouter();
+import { doc, setDoc, collection } from 'firebase/firestore';
+import { db } from "@/firebase";
 let auth = getAuth();
 
 export default {
   data: () => ({
-    dialog: true,
-    tab: 0,
-    tabs: [
-      { id: 0, name: "Login", icon: "fa-solid fa-user" },
-      { id: 1, name: "Register", icon: "fa-regular fa-user" }
-    ],
-    loginValid: true,
-    registerValid: true,
-
     username: "",
     firstName: "",
     lastName: "",
@@ -118,9 +109,19 @@ export default {
     selected: "",
     show1: false,
     show2: false,
-    accounts: [ 'user1@a.com', 'user2@b.com', 'user3@c.com'],
     loginError: false,
     loginErrorMessage: "",
+
+    dialog: true,
+    tab: 0,
+    tabs: [
+      { id: 0, name: "Login", icon: "fa-solid fa-user" },
+      { id: 1, name: "Register", icon: "fa-regular fa-user" }
+    ],
+    loading: false,
+    loginValid: true,
+    registerValid: true,
+
     nameRules: [
       (value: any)  => {
         if (value) return true
@@ -159,43 +160,55 @@ export default {
   },
   methods: {
     register() {
+      this.loading = !this.loading;
       createUserWithEmailAndPassword(auth, this.email, this.password)
+        .then((userCredential) => {
+          const uid = userCredential.user.uid;
+          return setDoc(doc(collection(db, 'User'), uid), {
+            ID: uid,
+            Admin_ID: uid,
+            firstname: this.firstName,
+            lastname: this.lastName,
+            email: this.email,
+            is_expert: false,
+            is_verifier: false,
+          })
+        })
         .then(() => {
           this.$router.push('/');
-          console.log(this.loginEmail + this.loginPassword);
         })
         .catch((error) => {
           console.error(error.code);
         });
     },
     async login() {
+      this.loading = !this.loading;
       try {
         await signInWithEmailAndPassword(getAuth(), this.loginEmail, this.loginPassword)
         .then(() => {
-          console.log(this.loginEmail, this.loginPassword);
           this.$router.push('/explore');
         })
       } catch(error: any) {
-        console.error(this.loginEmail);
         this.loginError = true;
         switch (error.code) {
           case "auth/invalid-email":
             this.loginErrorMessage = "Invalid email";
+            this.loading = false;
             break;
           case "auth/user-not-found":
             this.loginErrorMessage = "No account with that email was found";
+            this.loading = false;
             break;
           case "auth/wrong-password":
             this.loginErrorMessage = "Incorrect password";
+            this.loading = false;
             break;
           default:
             this.loginErrorMessage = "Email or password are invalid";
+            this.loading = false;
             break;
         }
-
       }
-        // .catch((error) => {
-        // });
     },
     googleLogin() {
       const provider = new GoogleAuthProvider();

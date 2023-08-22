@@ -2,7 +2,7 @@
   <v-app-bar :elevation="2">
     <v-app-bar-title>{{ title }}</v-app-bar-title>
     <template v-slot:append>
-      <v-btn icon="fa-solid fa-arrow-right-to-bracket" to="/register"></v-btn>
+      <v-btn v-if="!isLoggedin" icon="fa-solid fa-arrow-right-to-bracket" to="/register"></v-btn>
       <v-btn icon @click="toggleTheme">
         <v-icon class="fa" >{{ toggleThemeIcon }}</v-icon>
       </v-btn>
@@ -11,8 +11,9 @@
 </template>
 
 <script lang="ts">
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useTheme } from 'vuetify';
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 
 export default {
   props: {
@@ -35,6 +36,21 @@ export default {
       toggleTheme,
       toggleThemeIcon
     }
+  },
+  data() {
+    return {
+      isLoggedin: false,
+    }
+  },
+  mounted() {
+    let auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.isLoggedin = true;
+      } else {
+        this.isLoggedin = false;
+      }
+    });
   },
 }
 </script>

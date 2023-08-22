@@ -32,11 +32,9 @@
 </template>
 
 <script lang="ts">
-import { useRouter } from "vue-router";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 let auth: any;
-const router = useRouter();
 
 export default {
   props: {
@@ -69,12 +67,12 @@ export default {
         value: 'createpost',
         to: '/createpost',
       },
-      {
-        icon: 'fa-eye',
-        title: 'Review',
-        value: 'reviews',
-        to: '/review',
-      },
+      // {
+      //   icon: 'fa-eye',
+      //   title: 'Review',
+      //   value: 'reviews',
+      //   to: '/review',
+      // },
       {
         icon: 'fa-gear',
         title: 'Settings',
@@ -102,7 +100,7 @@ export default {
       if (this.isLoggedin) {
         return this.menuItems;
       } else {
-        return this.menuItems.filter(item => !['signout', 'explore', 'reviews', 'createpost'].includes(item.value));
+        return this.menuItems.filter(item => !['signout', 'settings', 'explore', 'reviews', 'createpost', 'profile'].includes(item.value));
       }
     }
   },

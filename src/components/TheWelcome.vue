@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import Post from "./Post.vue"
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 let auth: any;
 

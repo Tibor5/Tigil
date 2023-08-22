@@ -18,6 +18,7 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@firebase/firestore-types": "^3.0.0",
     "@mdi/font": "^7.2.96",
     "@tsconfig/node18": "^18.2.0",
     "@types/node": "^18.17.0",

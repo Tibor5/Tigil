@@ -1,24 +1,8 @@
 <template>
-  <!-- Verify Identity & Credentials -->
-  <!-- <v-row> -->
-  <!--   <v-col cols="12"> -->
-  <!--     <v-btn v-if="verifiedUser" @click="verifyIdentity">Verify Identity</v-btn> -->
-  <!--   </v-col> -->
-  <!-- </v-row> -->
-
   <!-- Post Title -->
   <v-row>
     <v-col cols="12" md="8">
       <v-text-field v-model="postTitle" label="Post Title" outlined></v-text-field>
-      <v-list v-if="similarPublications.length">
-        <!-- <v-list-item-group> -->
-        <!--   <v-list-item v-for="post in similarPublications" :key="post.id"> -->
-        <!--     <v-list-item-content label="Similar publications"> -->
-        <!--       <v-list-item-title>{{ post.title }}</v-list-item-title> -->
-        <!--     </v-list-item-content> -->
-        <!--   </v-list-item> -->
-        <!-- </v-list-item-group> -->
-      </v-list>
     </v-col>
   </v-row>
 
@@ -32,14 +16,14 @@
   <!-- References -->
   <v-row>
     <v-col cols="12" md="8">
-      <v-text-field v-model="reference" label="Add Reference URL" outlined @keyup.enter="addReference"></v-text-field>
+      <v-text-field v-model="reference" label="Add Reference URL, and press enter" outlined @keyup.enter="addReference"></v-text-field>
       <v-list>
-        <v-list-item v-for="(ref, index) in references" :key="index">
-          <v-list-item-content>
-            <v-list-item-title>{{ ref }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
+          <v-list-item v-for="(ref, index) in references" :key="index">
+            <v-list-item-content>
+              <v-list-item-title>{{ ref }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
     </v-col>
   </v-row>
 
@@ -52,28 +36,26 @@
 
   <v-row>
     <v-col cols="12">
-      <v-btn  :loading="creating" :disabled="creating" color="primary" @click="submitAndHome">Submit Publication</v-btn>
+      <v-btn  :loading="creating" :disabled="creating" color="primary" @click="submitAndHome">Submit</v-btn>
     </v-col>
   </v-row>
 </template>
 
 <script lang="ts">
 import { getAuth } from "firebase/auth";
+import { collection, doc, addDoc, getDoc, FieldValue } from "firebase/firestore";
 import { db } from "@/firebase";
-import { collection, getDocs, addDoc, onSnapshot } from "firebase/firestore";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
 
 export default {
   data() {
     return {
       creating: false,
       userID: "",
+      author: "",
       postTitle: "",
       postContent: "",
       reference: "",
-      references: [],
+      references: [] as string[],
       tags: [],
       verifiedUser: true,
       similarPublications: [
@@ -84,41 +66,33 @@ export default {
       ]
     };
   },
+  created() {
+    this.getUserId();
+    this.getUserName();
+  },
   methods: {
     getUserId() {
-      const authInstance = getAuth();
-      let userId = "";
+      const auth= getAuth();
+      const uid = auth.currentUser ? auth.currentUser.uid : null;
 
-      db.collection('User')
-        .where('name', '==', authInstance.currentUser.email.split('@')[0])
-        .get()
-        .then((query: any) => {
-          if (query.empty) {
-            alert('User not found');
-            return;
-          }
-
-          const doc = query.docs[0];
-          userId = doc.id;
-        })
-        .then(() => {
-          if (!userId) {
-            alert('User Error');
-            return;
-          }
-          this.userID = userId;
-        })
-        .catch((error: any ) => {
-          console.error("Error fetching user:", error);
-        });
+      if (uid) {
+        console.log("Found user ID.");
+        this.userID = uid!;
+      } else {
+        console.error("User ID not found");
+      }
     },
+    async getUserName() {
+      const docRef = doc(db, "User", this.userID);
+      const docSnap = await getDoc(docRef);
 
-    // checkSimilarPosts() {
-    //   this.similarPublications = [
-    //     { id: 1, title: "Sample Similar Post 1" },
-    //     { id: 2, title: "Sample Similar Post 2" }
-    //   ];
-    // },
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        this.author = `${userData.firstname} ${userData.lastname}`;
+      } else {
+        console.log("No such document!");
+      }
+    },
     addReference() {
       if (this.reference) {
         this.references.push(this.reference);
@@ -126,12 +100,15 @@ export default {
       }
     },
     submitPost() {
-      addDoc(collection(db, "Publication"), {
+      addDoc(collection(db, 'Publication'), {
         title: this.postTitle,
         content: this.postContent,
-        userID: this.getUserId,
+        author: this.author,
+        userID: this.userID,
         references: this.references,
-        tags: this.tags
+        tags: this.tags,
+        date: new Date(),
+        verified: false,
       });
     },
     submitAndHome() {
